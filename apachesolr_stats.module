@@ -992,7 +992,7 @@ function apachesolr_stats_report_frequent_keywords($keywords, $keywords_noresult
     }
     $font_size_pct = 80 + ($data['weight']) * 12;
     $items[] = l(
-      $word, "search/apachesolr_search/$word", array(
+      $word, "search/site/$word", array(
       'attributes' => array(
         'class' => $class,
         'style' => 'font-size:' . sprintf("%d%%", $font_size_pct),
@@ -1008,11 +1008,6 @@ function apachesolr_stats_report_frequent_keywords($keywords, $keywords_noresult
  * Return a listing of keywords for the Popular Searches block.
  */
 function apachesolr_stats_block_frequent_keywords($limit = 10) {
-  $cid = "apachesolr_stats_block_frequent_keywords";
-  $cached = cache_get($cid, 'cache_block');
-  if ($cached && $cached->data && $cached->expire > REQUEST_TIME) {
-    return $cached->data;
-  }
   $keywords = array();
   // Return keywords only last week's logged queries.
   $timestamp = REQUEST_TIME - 3600 * 24 * 7;
@@ -1037,11 +1032,8 @@ function apachesolr_stats_block_frequent_keywords($limit = 10) {
   $keywords = array_slice($keywords, 0, $limit);
   $links = array();
   foreach ($keywords as $key => $frequency) {
-    $links[] = l($key, 'search/apachesolr_search/' . $key);
+    $links[] = l($key, 'search/site/' . $key);
   }
-  // Cache information for 10 minutes.
-  $expire = REQUEST_TIME + 600;
-  cache_set($cid, $links, 'cache_block', $expire);
   return $links;
 }
 
